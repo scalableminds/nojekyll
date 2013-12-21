@@ -32,6 +32,6 @@
   },
   "scripts": {
     "start": "./bin/cli.js"
-  }
-
+  },
+  "license": "MIT"
 }
