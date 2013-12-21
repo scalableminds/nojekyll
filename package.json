@@ -1,0 +1,37 @@
+{
+  "name": "nojekyll",
+  "version": "0.0.1",
+  "author": {
+    "name": "Norman Rzepka",
+    "email": "norman@scm.io",
+    "url": "http://scm.io/"
+  },
+  "description": "Static site generator for node.js. Inspired by Jekyll.",
+  "dependencies": {
+    "express": "~3.4.6",
+    "gm": "~1.14.0",
+    "marked": "git://github.com/chjj/marked.git",
+    "connect": "~2.11.2",
+    "async": "~0.2.9",
+    "moment": "~2.4.0",
+    "yamljs": "~0.1.4",
+    "lodash": "~2.4.1",
+    "less": "~1.5.1",
+    "glob": "~3.2.7",
+    "coffee-script": "~1.6.3",
+    "highlight.js": "~7.5.0",
+    "tmp": "0.0.23",
+    "requirejs": "~2.1.9"
+  },
+  "peerDependencies": {
+    "stop": "~2.1.2"
+  },
+  "repository": { 
+    "type" : "git", 
+    "url" : "http://github.com/scalableminds/nojekyll.git"
+  },
+  "scripts": {
+    "start": "./bin/cli.js"
+  }
+
+}
