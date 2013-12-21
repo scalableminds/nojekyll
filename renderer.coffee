@@ -8,6 +8,7 @@ highlight = require("highlight.js").highlight
 config = require("./config")
 Page = require("./page")
 
+# Set up code highlighting
 markedRenderer = new (marked.Renderer)()
 markedRenderer.code = (code, lang) ->
   if lang
@@ -21,6 +22,7 @@ markedRenderer.code = (code, lang) ->
   
 
 marked.setOptions(
+  # Smart quotes and stuff
   smartypants : true
   renderer : markedRenderer
 )
@@ -30,6 +32,7 @@ Renderer = module.exports =
 
   loadLayout : (layoutName, callback) ->
 
+    # A layout is specified without any suffix. The suffix will be added here.
     glob("#{config.path.root}/#{config.path.layouts}/#{layoutName}#{config.path.layoutSuffix}", (err, files) ->
 
       if err or files.length == 0
@@ -57,7 +60,7 @@ Renderer = module.exports =
 
   resolveLayouts : (post, callback) ->
 
-    # walk up the layout tree
+    # Walking up the layout tree...
     if post.layout
 
       async.waterfall([
@@ -65,9 +68,11 @@ Renderer = module.exports =
         (callback) -> Renderer.loadLayout(post.layout, callback)
         
         (layoutData, callback) -> 
+          # Resolve parent layout
           Renderer.resolveLayouts(Page.readFrontMatter(layoutData), callback)
 
         (layout, callback) ->
+          # Insert content in content gap
           callback(null, layout.replace(config.patterns.content, post.content))
 
       ], callback)
@@ -79,6 +84,9 @@ Renderer = module.exports =
 
   resolveIncludes : (content, callback) ->
 
+    # Includes can have new includes, so we loop
+    # until we have resolved all. May never end
+    # if there is a cyclic reference.
     async.whilst(
 
       # run while there is still an include tag
@@ -119,8 +127,10 @@ Renderer = module.exports =
       (err) -> callback(err, content)
     )
 
-  renderSitePosts : (site, callback) ->
 
+  renderSitePosts : (site, callback) ->
+    
+    # Pre-render the post data of all posts
     callback(
       null
       site.posts.map( (post) ->

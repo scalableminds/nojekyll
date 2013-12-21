@@ -1,6 +1,7 @@
 require("coffee-script").register()
 GLOBAL._ = require("lodash")
 
+# npm modules
 express = require("express")
 async = require("async")
 fs = require("fs")
@@ -9,26 +10,30 @@ moment = require("moment")
 glob = require("glob")
 connect = require("connect")
 
-
+# local modules
 config = require("./config")
 Renderer = require("./renderer")
 Page = require("./page")
 Post = require("./post")
 Site = require("./site")
 
-config = _.merge(config, require("#{process.cwd()}/config"))
+# merge user config with default config
+if fs.existsSync("#{process.cwd()}/config.coffee") or fs.existsSync("#{process.cwd()}/config.js")
+  config = _.merge(config, require("#{process.cwd()}/config"))
 
-
-_.templateSettings.imports.encrypt = (input) -> input.replace(/./g, (a) ->  "&##{a.charCodeAt(0)};")
-
-
+# Setup Express
 app = express()
 
+
+# Hooks for plugins
 app.imports = _.templateSettings.imports
 app.config = config
 
+# Logging
 app.use(connect.logger("tiny"))
 
+
+# Serving posts
 app.use((req, res, next) ->
 
   Site.read(req.path, (err, site) ->
@@ -51,6 +56,7 @@ app.use((req, res, next) ->
 
 )
 
+# Serving pages
 app.use((req, res, next) ->
 
   Site.read(req.path, (err, site) ->
@@ -74,14 +80,20 @@ app.use((req, res, next) ->
 
 )
 
-fs.readdirSync("#{__dirname}/plugins").forEach( (path) ->
-  require("#{__dirname}/plugins/#{path}")(app)
-)
+# Include bundled plugins
+if fs.existsSync("#{__dirname}/plugins")
+  fs.readdirSync("#{__dirname}/plugins").forEach( (path) ->
+    require("#{__dirname}/plugins/#{path}")(app)
+  )
 
-fs.readdirSync("#{config.path.root}/#{config.path.plugins}").forEach( (path) ->
-  require("#{config.path.root}/#{config.path.plugins}/#{path}")(app)
-)
+# Include user plugins
+if fs.existsSync("#{config.path.root}/#{config.path.plugins}")
+  fs.readdirSync("#{config.path.root}/#{config.path.plugins}").forEach( (path) ->
+    require("#{config.path.root}/#{config.path.plugins}/#{path}")(app)
+  )
 
+# Serve all the other files
 app.use(express.static(config.path.root))
 
+# Here we go
 app.listen(config.port)

@@ -54,8 +54,20 @@ module.exports =
   # Excerpts will be cut off before the first occurence of this token.
   excerpt_seperator : "<!-- break -->"
 
-  # Your image presets
+  # Your image presets. Something like:
+  # {
+  #   thumbnail:
+  #     width: 300
+  #     height: 200
+  #     crop: true
+  #     quality: .6
+  # }
   images : {}
+
+  # Configuration for RequireJS. Please refer to:
+  # http://requirejs.org/docs/optimization.html
+  # https://github.com/jrburke/r.js/blob/master/build/example.build.js
+  scripts : {}
 
   # On which port should the server listen?
   port : 3000

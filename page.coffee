@@ -25,6 +25,8 @@ Page = module.exports =
 
   
   readFrontMatter : (fileData) ->
+    # Front-matter is the meta data that can be specified in the top
+    # of a post or page. It's usually separated by two `---` lines.
 
     [a, frontMatter, content] = fileData.match(config.patterns.splitFrontMatter)
     
@@ -43,6 +45,8 @@ Page = module.exports =
     async.waterfall([
 
       (callback) ->
+        # A page could be in the pages directory. 
+        # Either directly a html file or an index.html in a directory.
         glob("#{config.path.root}#{config.path.pages}#{url}{/,}{index,}.html", callback)
 
       (files, callback) -> 

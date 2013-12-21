@@ -6,10 +6,12 @@ module.exports = (app) ->
 
   app.use("/styles", (req, res, next) ->
 
+    # Is it actually a css file? Could also be a font.
     if /\.css/.test(req.path)
 
       lessFilename = req.path.replace(/\.css$/, ".less")
 
+      # Find original less file.
       fs.readFile("#{app.config.path.root}/styles#{lessFilename}", "utf8", (err, fileData) ->
 
         if err and err.code == "ENOENT"

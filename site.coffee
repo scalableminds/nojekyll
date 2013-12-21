@@ -13,11 +13,14 @@ Site = module.exports =
 
     async.waterfall([
       
+      # Get all posts
       Post.readAll
 
       (posts, callback) ->
 
+        # Sort by post date DESC
         site.posts = _.sortBy(posts, (post) -> -post.date.valueOf())
+        
         callback(null, site)
 
     ], callback)

@@ -47,14 +47,19 @@ module.exports = (app) ->
 
   app.use("/images", (req, res, next) ->
 
+    # Is it an image in like `DSC1234-thumbnail.jpg`? Then we need to resize.
+    # `DSC1234.jpg` would be the original and `thumbnail` the resizing preset.
     if match = req.path.match(/\/.*-(.+)\.(\w+)/)
       [a, imageKey, ext] = match
 
       if app.config.images[imageKey]
+        # Trace the original file
         originalFilename = "#{app.config.path.root}/#{app.config.path.images}#{req.path.replace("-#{imageKey}","")}"
+
         fs.exists(originalFilename, (exists) ->
           if exists
 
+            # Ok, let's resize.
             resizeImage(originalFilename, imageKey, (err, stream) ->
               if err
                 res.send(500, err.toString())

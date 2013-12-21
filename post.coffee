@@ -5,11 +5,11 @@ moment = require("moment")
 config = require("./config")
 Page = require("./page")
 
-
 Post = module.exports =    
 
   read : (filename, callback) ->
 
+    # A post is only a post if it matches the filename pattern.
     [a, date, slug] = filename.match(config.patterns.post)
 
     post =
